@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+ 
+    <title>Login</title>
+  </head>
+  <body>
+    <div class="container bg-secondary text-white" id="bigBox">
+	  <h1 class="bg-secondary text-info">Join us today!</h1>
+		<div class="input-group">
+		<div class="input-group-prepend">
+			<span class="input-group-text" id="basic-addon1">Email</span>
+		</div>
+		<input type="text" class="form-control" id="email1" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+			</div>
+		<div class="input-group">
+	  <div class="input-group-prepend">
+			<span class="input-group-text" id="passw">Password</span>
+		</div>
+		<input type="text" class="form-control" id="pword1" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2">
+			</div>
+		<div class="input-group">
+		<div class="input-group-prepend">
+			<span class="input-group-text" id="botq"></span>
+		</div>
+		<input type="text" class="form-control" id="captcha" placeholder="CAPTCHA" aria-label="CAPTCHA" aria-describedby="basic-addon2">
+			</div>
+		<button id="loginBttn" class="">Login!</button>
+		<div class="d-none" id="errormsg">
+			
+		</div>
+		<div class="d-none" id="errormsg1">
+			
+		</div>
+		<div class="d-none" id="errormsg2">
+			
+		</div>
+		<select class="form-control" id="pwordselect">
+			<option value="">Password Testing</option>
+			<option value="pworddollarsign">Dollar Sign in Pword</option>
+			<option value="pwordasterisk">Asterisk in Pword</option>
+			<option value="pwordtooshort">Too Short</option>
+			<option value="pwordgood">Password good</option>
+		</select>
+		<select class="form-control" id="emailselect">
+			<option value="">Email Testing</option>
+			<option value="emailtooshort">Email too short</option>
+			<option value="emailnoat">No @ in Email</option>
+			<option value="emaildotat">. before @ in Email</option>
+			<option value="emailgood">Email good</option>
+		</select>
+	  </div>
+ 
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script>
+	  let gDoc=(id)=>{return document.getElementById(id);}
+	  let loginClicked=(e)=>{
+		  let emailElem=gDoc("email1");
+		  let boolValidEmail=isValidEmail(emailElem.value);
+		  console.log(boolValidEmail);
+		  let mathElem=gDoc("captcha");
+		  let boolGoodMath=isGoodMath(mathElem.value);
+		  let pWordElem=gDoc("pword1");
+		  let boolValidPword=isValidPword(pWordElem.value);
+		  let bMathError=false;
+		  let errorD=gDoc("errormsg");
+		  let errorE=gDoc("errormsg1");
+		  let errorM=gDoc("errormsg2");
+		  let goodLogin=gDoc("successmsg")
+		  if(boolValidPword===false){
+			  errorD.className="d-block bg-danger text-light m-4 p-4 mt-2";
+			  errorD.innerHTML="<p>Your password is bad.</p>";
+			  errorD.innerHTML+="<ul>";
+			  errorD.innerHTML+="<li>At least 5 characters</li>";
+			  errorD.innerHTML+="<li>No dollar sign ($)</li>";
+			  errorD.innerHTML+="<li>No asterisk (*)</li>";
+			  errorD.innerHTML+="</ul>";
+			  pWordElem.select();
+			  $("#errormsg").fadeOut();
+			  $("#errormsg").fadeIn();
+		  }
+		  if(boolValidPword===true){
+			  errorD.className="d-none";
+		  }
+		  if(boolValidEmail===false){
+			  errorE.className="d-block bg-danger text-light m-4 p-4 mt-2";
+			  errorE.innerHTML="<p>Your email is bad.</p>";
+			  errorE.innerHTML+="<ul>";
+			  errorE.innerHTML+="<li>At least 5 characters</li>";
+			  errorE.innerHTML+="<li>Must have @</li>";
+			  errorE.innerHTML+="<li>No . before @</li>";
+			  errorE.innerHTML+="</ul>";
+			  emailElem.select();
+			  $("#errormsg1").fadeOut();
+			  $("#errormsg1").fadeIn();
+		  }
+		  if(boolValidEmail===true){
+			  errorE.className="d-none";
+		  }
+		  if(boolGoodMath===false){
+			  errorM.className="d-block bg-danger text-light m-4 p-4 mt-2";
+			  errorM.innerHTML="<p>Your math is bad. Are you human?</p>";
+			  errorM.innerHTML+="<ul>";
+			  errorM.innerHTML+="<li>Answer the question correctly.</li>";
+			  errorM.innerHTML+="</ul>";
+			  mathElem.select();
+			  bMathError=true;
+			  $("#errormsg2").fadeOut();
+			  $("#errormsg2").fadeIn();
+		  }
+		  if(bMathError===false){
+			  errorM.className="d-none";
+		  }
+	  } //loginclicked
+	  let generateBotQ=(e)=>{
+		  let botQuest=gDoc("botq");
+		  let c1=Math.floor(Math.random()*21)+2;
+		  let c2=Math.floor(Math.random()*21)+2;
+		  console.log(c1);
+		  console.log(c2);
+		  botAnswer=c2+c1;
+		  botQuest.innerHTML="What is "+c1+"+"+c2+" ?";
+		  console.log(botAnswer);
+	  }
+	  let isGoodMath=(num)=>{
+			let mathElem=gDoc("captcha");
+			if(mathElem.value==botAnswer){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+	  let isValidPword=(str)=>{
+		  if(str.length<5){
+			  return false;
+		  }
+		  if(str.indexOf("$")>-1){
+			  return false;
+		  }
+		  if(str.indexOf("*")>-1){
+			  return false;
+		  }
+		  else{
+			  return true;
+		  }
+	  }
+	  gDoc("loginBttn").addEventListener("click",loginClicked);
+	  window.addEventListener("load",generateBotQ);
+	  gDoc("loginBttn").addEventListener("click",generateBotQ);
+	  let botAnswer=-1;
+	  let pWordSelect=gDoc("pwordselect");
+	  pWordSelect.addEventListener("change",function(evt){
+		  let selected=gDoc("pwordselect").value;
+		  console.log(selected);
+	  const CASE_PWORD_TOO_SHORT="pwordtooshort";
+	  const CASE_PWORD_HAS_DOLLARSIGN="pworddollarsign";
+      const CASE_PWORD_HAS_ASTERISK="pwordasterisk";
+	  const CASE_PWORD_GOOD="pwordgood";	  
+      let pWordElem=gDoc("pword1");
+		  if(selected==CASE_PWORD_TOO_SHORT){
+			  pWordElem.value="abc";
+		  }
+		  if(selected==CASE_PWORD_HAS_DOLLARSIGN){
+			  pWordElem.value="abcde$";
+		  }
+		  if(selected==CASE_PWORD_HAS_ASTERISK){
+			  pWordElem.value="abcde*";
+		  }
+		  if(selected==CASE_PWORD_GOOD){
+			  pWordElem.value="abcdefg";
+		  }
+		  loginClicked();
+	  });
+	  let EmailSelect=gDoc("emailselect");
+	  EmailSelect.addEventListener("change",function(evt){
+		  let selected=gDoc("emailselect").value;
+		  console.log(selected);
+	  const CASE_EMAIL_TOO_SHORT="emailtooshort";
+	  const CASE_EMAIL_NO_AT="emailnoat";
+      const CASE_EMAIL_DOT_AT="emaildotat";
+	  const CASE_EMAIL_GOOD="emailgood";	  
+      let emailElem=gDoc("email1");
+		  if(selected==CASE_EMAIL_TOO_SHORT){
+			  emailElem.value="a@c.o";
+		  }
+		  if(selected==CASE_EMAIL_NO_AT){
+			  emailElem.value="abc.co";
+		  }
+		  if(selected==CASE_EMAIL_DOT_AT){
+			  emailElem.value="a.bc@co";
+		  }
+		  if(selected==CASE_EMAIL_GOOD){
+			  emailElem.value="abc@de.co";
+		  }
+		  loginClicked();
+	  });
+		let isValidEmail=(str)=>{
+		  if(str.length>=5 && str.indexOf("@")>-1 && str.indexOf(".")>str.indexOf("@")){
+			  return true;
+		  }
+		  else{
+			  return false;
+		  }
+		}
+	</script>
+  </body>
+</html>
