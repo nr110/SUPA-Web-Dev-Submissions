@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+ 
+    <title>Quiz Averager</title>
+  </head>
+  <body>
+	<div class="container">
+    	<h1 class="bg-primary text-white text-center rounded">Quiz Averager</h1>
+	  	<div class="input-group mb-3">
+	  		<div class="input-group-prepend">
+		  		<span class="input-group-text" id="basic-addon1">Add A Quiz:</span>
+			</div>
+			<input type="text" class="form-control" placeholder="Enter Next Quiz Score" aria-label="enterQuiz" aria-describedby="basic-addon1" id="quizgrade">
+			<button type="button" id="addquizbttn" class="btn btn-primary">Add New Quiz</button><button type="button" id="clearbttn" class="disabled btn btn-danger">Clear</button>
+	  	</div>
+		<div class="row">
+		<h2 class="col-md-6 col-12 bg-success text-white text-center rounded">Quiz Grades</h2>
+			<h2 class="col-6 bg-success text-white text-center rounded">Average</h2>
+		</div>
+		<div class="row">
+			<h3 class="col-md-6 col-12 bg-light text-dark" id="quizdiv"></h3>
+			<h3 class="col-6 bg-light text-dark" id="avgdiv"></h3>
+		</div>
+		<div class="row" id="tagout"></div>
+		<div class="bg-danger text-white" id="errordiv">
+			Please input a numerical score.
+		</div>
+			</div>
+ 
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script>
+	  let quizzes=[];
+		let addQuizClicked=(e)=>{
+			document.getElementById("errordiv").className="d-none";
+			let scoreElement=document.getElementById("quizgrade");
+			let score=parseFloat(scoreElement.value);
+			if(Number.isNaN(score)){
+				document.getElementById("errordiv").className="d-block";
+				scoreElement.select();
+				return;
+			}
+			quizzes.push(score);
+			document.getElementById("clearbttn").className="btn btn-danger";
+			document.getElementById("quizdiv").innerHTML="";
+			let htm="<div class='row'>";
+			for(let i=0;i<quizzes.length;i++){
+				htm+="<div class='border mt-2 mb-2 text-center p-2 col-12 col-md-6' id='quiz_"+i+"'>";
+				htm+=quizzes[i];
+				htm+="</div>";
+			}
+			document.getElementById("quizdiv").innerHTML+=htm;
+			let droplowest=false;
+			let ave=average(quizzes,false);
+			document.getElementById("avgdiv").innerHTML=ave.toFixed(2);
+			scoreElement.value="";
+			scoreElement.focus();
+		}
+		for(let i=0;i<quizzes.length;i++){
+			console.log(i);
+		}
+		let sum=(nums)=>{
+			let s=0;
+			for(let i=0;i<nums.length;i++){
+				s+=nums[i];
+			}
+			return s;
+		}
+		let smallest=(nums)=>{
+			let small=nums[0];
+			for(let i=0;i<nums.length;i++){
+				if(nums[i]<small){
+					small=nums[i];
+				}
+				return small;
+			}
+		}
+		let average=(vals, dropLowest)=>{
+			if(dropLowest===true){
+				let mySum=sum(vals)-smallest(vals);
+				return mySum/(vals.length-1);
+			}
+			if(dropLowest===false){
+				let trueSum=sum(vals);
+				return trueSum/vals.length;
+			}
+		}
+		let go=(nums)=>{
+			let scoreThing=document.getElementById("quizgrade");
+			scoreThing.value=85;
+			addQuizClicked();
+			scoreThing.value=44;
+			addQuizClicked();
+			scoreThing.value=100;
+			addQuizClicked();
+			scoreThing.value=22;
+			addQuizClicked();
+		}
+		go();
+		let clear=(e)=>{
+			document.getElementById("quizdiv").innerHTML="";
+			document.getElementById("avgdiv").innerHTML="";
+			quizzes=[];
+			document.getElementById("clearbttn").className="disabled btn btn-danger";
+			let scoreE=document.getElementById("quizgrade");
+			scoreE.value="";
+			scoreE.focus();
+		}
+		document.getElementById("clearbttn").addEventListener("click",clear);
+		document.getElementById("addquizbttn").addEventListener("click",addQuizClicked);
+		document.getElementById("quizgrade").addEventListener("keydown",function(e){
+			if(e.code==="Enter"){
+				e.preventDefault();
+				addQuizClicked();
+			}
+		});
+		let qDivClicked=(e)=>{
+			alert(e.target.id);
+		}
+		document.getElementById("quizdiv").addEventListener("click",qDivClicked);
+	</script>
+  </body>
+</html>
